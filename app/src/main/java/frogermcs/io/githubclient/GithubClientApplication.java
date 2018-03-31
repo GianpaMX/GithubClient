@@ -13,7 +13,7 @@ import timber.log.Timber;
 /**
  * Created by Miroslaw Stanek on 22.04.15.
  */
-    public class GithubClientApplication extends Application {
+public class GithubClientApplication extends Application {
 
     private AppComponent appComponent;
     private UserComponent userComponent;
@@ -35,7 +35,7 @@ import timber.log.Timber;
 
     private void initAppComponent() {
         appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
+                .application(this)
                 .build();
     }
 

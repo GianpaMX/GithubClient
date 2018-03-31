@@ -14,21 +14,9 @@ import frogermcs.io.githubclient.utils.Validator;
  */
 @Module
 public class AppModule {
-    private Application application;
-
-    public AppModule(Application application) {
-        this.application = application;
-    }
-
     @Provides
     @Singleton
-    public Application provideApplication() {
-        return application;
-    }
-
-    @Provides
-    @Singleton
-    AnalyticsManager provideAnalyticsManager() {
+    AnalyticsManager provideAnalyticsManager(Application application) {
         return new AnalyticsManager(application);
     }
 

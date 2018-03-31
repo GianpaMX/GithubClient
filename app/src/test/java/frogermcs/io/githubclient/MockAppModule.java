@@ -20,7 +20,7 @@ public class MockAppModule extends AppModule {
     }
 
     @Override
-    AnalyticsManager provideAnalyticsManager() {
+    AnalyticsManager provideAnalyticsManager(Application application) {
         return analyticsManagerMock;
     }
 }
