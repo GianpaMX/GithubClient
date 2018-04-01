@@ -2,7 +2,6 @@ package frogermcs.io.githubclient.tests;
 
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -12,16 +11,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
+import frogermcs.io.githubclient.HeavyLibraryWrapper;
 import frogermcs.io.githubclient.R;
 import frogermcs.io.githubclient.data.api.UserManager;
 import frogermcs.io.githubclient.data.model.User;
 import frogermcs.io.githubclient.inject.ApplicationMock;
-import frogermcs.io.githubclient.inject.GithubApiModuleMock;
 import frogermcs.io.githubclient.ui.activity.SplashActivity;
+import frogermcs.io.githubclient.ui.activity.presenter.SplashActivityPresenter;
+import frogermcs.io.githubclient.utils.AnalyticsManager;
+import frogermcs.io.githubclient.utils.Validator;
 import rx.Observable;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -32,6 +34,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 
 /**
  * Created by Miroslaw Stanek on 23.09.15.
@@ -40,7 +44,12 @@ import static org.mockito.Matchers.anyString;
 public class SplashActivityUITests {
 
     @Mock
-    UserManager userManagerMock;
+    AnalyticsManager analyticsManagerMock = mock(AnalyticsManager.class);
+
+    @Mock
+    UserManager userManagerMock = mock(UserManager.class);
+
+    private SplashActivityPresenter presenter;
 
     @Rule
     public ActivityTestRule<SplashActivity> activityRule = new ActivityTestRule<>(
@@ -49,11 +58,16 @@ public class SplashActivityUITests {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        GithubApiModuleMock githubApiModuleMock = new GithubApiModuleMock(userManagerMock);
+        reset(analyticsManagerMock, userManagerMock);
+
+        presenter = new SplashActivityPresenter(new Validator(), userManagerMock, new HeavyLibraryWrapper());
+
         ApplicationMock app = (ApplicationMock) InstrumentationRegistry.getTargetContext().getApplicationContext();
-        app.setGithubApiModuleMock(githubApiModuleMock);
-        activityRule.launchActivity(new Intent());
+        app.analyticsManager = analyticsManagerMock;
+        app.splashActivityPresenter = presenter;
+
+        SplashActivity activity = activityRule.launchActivity(new Intent());
+        presenter.setView(activity);
     }
 
     @Test

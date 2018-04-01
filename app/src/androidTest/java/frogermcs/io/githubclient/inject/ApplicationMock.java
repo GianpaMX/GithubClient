@@ -1,33 +1,30 @@
 package frogermcs.io.githubclient.inject;
 
-import frogermcs.io.githubclient.AppComponent;
-import frogermcs.io.githubclient.AppModule;
-import frogermcs.io.githubclient.DaggerAppComponent;
+import android.app.Activity;
+
+import dagger.android.AndroidInjector;
 import frogermcs.io.githubclient.GithubClientApplication;
-import frogermcs.io.githubclient.data.api.GithubApiModule;
+import frogermcs.io.githubclient.ui.activity.SplashActivity;
+import frogermcs.io.githubclient.ui.activity.presenter.SplashActivityPresenter;
+import frogermcs.io.githubclient.utils.AnalyticsManager;
 
 /**
  * Created by Miroslaw Stanek on 24.09.15.
  */
 public class ApplicationMock extends GithubClientApplication {
 
-    private AppComponent appComponent;
-    private GithubApiModule githubApiModuleMock;
-
-    public void setGithubApiModuleMock(GithubApiModule githubApiModuleMock) {
-        this.githubApiModuleMock = githubApiModuleMock;
-        setupMockAppComponent();
-    }
-
-    public void setupMockAppComponent() {
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .githubApiModule(githubApiModuleMock)
-                .build();
-    }
+    public SplashActivityPresenter splashActivityPresenter;
+    public AnalyticsManager analyticsManager;
 
     @Override
-    public AppComponent getAppComponent() {
-        return appComponent == null ? super.getAppComponent() : appComponent;
+    public AndroidInjector<Activity> activityInjector() {
+        return new AndroidInjector<Activity>() {
+            @Override
+            public void inject(Activity instance) {
+                SplashActivity activity = (SplashActivity) instance;
+                activity.presenter = splashActivityPresenter;
+                activity.analyticsManager = analyticsManager;
+            }
+        };
     }
 }

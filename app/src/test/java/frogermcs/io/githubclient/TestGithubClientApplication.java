@@ -1,11 +1,11 @@
 package frogermcs.io.githubclient;
 
-import frogermcs.io.githubclient.ui.activity.component.SplashActivityComponent;
-import frogermcs.io.githubclient.ui.activity.module.SplashActivityModule;
+import android.app.Activity;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import dagger.android.AndroidInjector;
+import frogermcs.io.githubclient.ui.activity.SplashActivity;
+import frogermcs.io.githubclient.ui.activity.presenter.SplashActivityPresenter;
+import frogermcs.io.githubclient.utils.AnalyticsManager;
 
 /**
  * Created by Miroslaw Stanek on 19.09.15.
@@ -13,21 +13,18 @@ import static org.mockito.Mockito.when;
 public class TestGithubClientApplication
         extends GithubClientApplication {
 
-    private AppComponent appComponent;
-    private SplashActivityComponent splashActivityComponent;
+    public SplashActivityPresenter splashActivityPresenter;
+    public AnalyticsManager analyticsManager;
 
     @Override
-    public AppComponent getAppComponent() {
-        if (appComponent == null) {
-            appComponent = mock(AppComponent.class);
-            when(appComponent.plus(any(SplashActivityModule.class)))
-                    .thenReturn(splashActivityComponent);
-        }
-
-        return appComponent;
-    }
-
-    public void setSplashActivityComponent(SplashActivityComponent component) {
-        this.splashActivityComponent = component;
+    public AndroidInjector<Activity> activityInjector() {
+        return new AndroidInjector<Activity>() {
+            @Override
+            public void inject(Activity instance) {
+                SplashActivity activity = (SplashActivity) instance;
+                activity.presenter = splashActivityPresenter;
+                activity.analyticsManager = analyticsManager;
+            }
+        };
     }
 }

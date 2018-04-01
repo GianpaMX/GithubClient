@@ -5,8 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -14,12 +12,10 @@ import org.robolectric.annotation.Config;
 
 import frogermcs.io.githubclient.BuildConfig;
 import frogermcs.io.githubclient.TestGithubClientApplication;
-import frogermcs.io.githubclient.ui.activity.component.SplashActivityComponent;
+import frogermcs.io.githubclient.ui.activity.presenter.SplashActivityPresenter;
 import frogermcs.io.githubclient.utils.AnalyticsManager;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -34,7 +30,8 @@ import static org.mockito.Mockito.verify;
 public class SplashActivityTests {
 
     @Mock
-    SplashActivityComponent splashActivityComponentMock;
+    SplashActivityPresenter splashActivityPresenter;
+
     @Mock
     AnalyticsManager analyticsManagerMock;
 
@@ -42,17 +39,9 @@ public class SplashActivityTests {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) {
-                SplashActivity activity = (SplashActivity) invocation.getArguments()[0];
-                activity.analyticsManager = analyticsManagerMock;
-                return null;
-            }
-        }).when(splashActivityComponentMock).inject(any(SplashActivity.class));
-
         TestGithubClientApplication app = (TestGithubClientApplication) RuntimeEnvironment.application;
-        app.setSplashActivityComponent(splashActivityComponentMock);
+        app.analyticsManager = analyticsManagerMock;
+        app.splashActivityPresenter = splashActivityPresenter;
     }
 
     @Test
