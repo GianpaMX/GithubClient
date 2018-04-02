@@ -3,21 +3,21 @@ package frogermcs.io.githubclient.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import frogermcs.io.githubclient.GithubClientApplication;
+import dagger.android.AndroidInjection;
 import frogermcs.io.githubclient.R;
 import frogermcs.io.githubclient.data.model.Repository;
-import frogermcs.io.githubclient.ui.activity.module.RepositoryDetailsActivityModule;
 import frogermcs.io.githubclient.ui.activity.presenter.RepositoryDetailsActivityPresenter;
 import frogermcs.io.githubclient.utils.AnalyticsManager;
 
 
-public class RepositoryDetailsActivity extends BaseActivity {
+public class RepositoryDetailsActivity extends AppCompatActivity {
     private static final String ARG_REPOSITORY = "arg_repository";
 
     @BindView(R.id.tvRepoName)
@@ -42,6 +42,7 @@ public class RepositoryDetailsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repository_details);
         ButterKnife.bind(this);
@@ -52,14 +53,6 @@ public class RepositoryDetailsActivity extends BaseActivity {
         tvRepoDetails.setText(repository.url);
 
         presenter.init();
-    }
-
-    @Override
-    protected void setupActivityComponent() {
-        GithubClientApplication.get(this).getUserComponent()
-                .plus(new RepositoryDetailsActivityModule(this))
-                .inject(this);
-
     }
 
     public void setupUserName(String userName) {

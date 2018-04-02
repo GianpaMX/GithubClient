@@ -7,12 +7,12 @@ import android.content.Context;
 import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import frogermcs.io.githubclient.data.UserComponent;
-import frogermcs.io.githubclient.data.api.UserModule;
 import frogermcs.io.githubclient.data.model.User;
 import timber.log.Timber;
 
@@ -23,6 +23,9 @@ public class GithubClientApplication extends Application implements HasActivityI
 
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingActivityInjector;
+
+    @Inject
+    Provider<UserComponent.Builder> userComponentProvider;
 
     private AppComponent appComponent;
     private UserComponent userComponent;
@@ -50,9 +53,8 @@ public class GithubClientApplication extends Application implements HasActivityI
         appComponent.inject(this);
     }
 
-    public UserComponent createUserComponent(User user) {
-        userComponent = appComponent.plus(new UserModule(user));
-        return userComponent;
+    public void createUserComponent(User user) {
+        userComponentProvider.get().user(user).build();
     }
 
     public void releaseUserComponent() {

@@ -1,24 +1,24 @@
 package frogermcs.io.githubclient.data;
 
+import dagger.BindsInstance;
 import dagger.Subcomponent;
 import frogermcs.io.githubclient.data.api.UserModule;
-import frogermcs.io.githubclient.ui.activity.component.RepositoriesListActivityComponent;
-import frogermcs.io.githubclient.ui.activity.component.RepositoryDetailsActivityComponent;
-import frogermcs.io.githubclient.ui.activity.module.RepositoriesListActivityModule;
-import frogermcs.io.githubclient.ui.activity.module.RepositoryDetailsActivityModule;
+import frogermcs.io.githubclient.data.model.User;
 
 /**
  * Created by Miroslaw Stanek on 23.06.15.
  */
 @UserScope
-@Subcomponent(
-        modules = {
-                UserModule.class
-        }
-)
+@Subcomponent(modules = {
+        UserModule.class,
+        UserActivityBuilder.class
+})
 public interface UserComponent {
+    @Subcomponent.Builder
+    interface Builder {
+        @BindsInstance
+        UserComponent.Builder user(User user);
 
-    RepositoriesListActivityComponent plus(RepositoriesListActivityModule module);
-
-    RepositoryDetailsActivityComponent plus(RepositoryDetailsActivityModule module);
+        UserComponent build();
+    }
 }

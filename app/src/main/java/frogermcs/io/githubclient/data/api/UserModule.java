@@ -4,25 +4,16 @@ import dagger.Module;
 import dagger.Provides;
 import frogermcs.io.githubclient.data.UserScope;
 import frogermcs.io.githubclient.data.model.User;
+import frogermcs.io.githubclient.ui.activity.component.RepositoriesListActivityComponent;
+import frogermcs.io.githubclient.ui.activity.component.RepositoryDetailsActivityComponent;
 
 /**
  * Created by Miroslaw Stanek on 23.06.15.
  */
-@Module
+@Module(subcomponents = {
+        RepositoriesListActivityComponent.class,
+        RepositoryDetailsActivityComponent.class})
 public class UserModule {
-
-    private User user;
-
-    public UserModule(User user) {
-        this.user = user;
-    }
-
-    @Provides
-    @UserScope
-    User provideUser() {
-        return user;
-    }
-
     @Provides
     @UserScope
     RepositoriesManager provideRepositoriesManager(User user, GithubApiService githubApiService) {

@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import frogermcs.io.githubclient.data.UserComponent;
 import frogermcs.io.githubclient.ui.activity.component.SplashActivityComponent;
 import frogermcs.io.githubclient.utils.AnalyticsManager;
 import frogermcs.io.githubclient.utils.Validator;
@@ -13,7 +14,10 @@ import frogermcs.io.githubclient.utils.Validator;
 /**
  * Created by Miroslaw Stanek on 22.04.15.
  */
-@Module(subcomponents = SplashActivityComponent.class)
+@Module(subcomponents = {
+        SplashActivityComponent.class,
+        UserComponent.class
+})
 public class AppModule {
     @Provides
     @Singleton

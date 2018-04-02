@@ -16,6 +16,5 @@ public abstract class ActivityBuilder {
     @Binds
     @IntoMap
     @ActivityKey(SplashActivity.class)
-    public abstract AndroidInjector.Factory<? extends Activity> bindAndroidInjectorFactory(SplashActivityComponent.Builder builder);
-
+    public abstract AndroidInjector.Factory<? extends Activity> bindSplashActivity(SplashActivityComponent.Builder builder);
 }

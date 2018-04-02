@@ -24,21 +24,9 @@ import frogermcs.io.githubclient.ui.adapter.viewholder.RepositoryViewHolderNorma
  */
 @Module
 public class RepositoriesListActivityModule {
-    private RepositoriesListActivity repositoriesListActivity;
-
-    public RepositoriesListActivityModule(RepositoriesListActivity repositoriesListActivity) {
-        this.repositoriesListActivity = repositoriesListActivity;
-    }
-
     @Provides
     @ActivityScope
-    RepositoriesListActivity provideRepositoriesListActivity() {
-        return repositoriesListActivity;
-    }
-
-    @Provides
-    @ActivityScope
-    RepositoriesListActivityPresenter provideRepositoriesListActivityPresenter(RepositoriesManager repositoriesManager) {
+    RepositoriesListActivityPresenter provideRepositoriesListActivityPresenter(RepositoriesListActivity repositoriesListActivity, RepositoriesManager repositoriesManager) {
         return new RepositoriesListActivityPresenter(repositoriesListActivity, repositoriesManager);
     }
 

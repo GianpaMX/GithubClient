@@ -1,6 +1,7 @@
 package frogermcs.io.githubclient.ui.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,15 +13,15 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
 import frogermcs.io.githubclient.GithubClientApplication;
 import frogermcs.io.githubclient.R;
 import frogermcs.io.githubclient.data.model.Repository;
-import frogermcs.io.githubclient.ui.activity.module.RepositoriesListActivityModule;
 import frogermcs.io.githubclient.ui.activity.presenter.RepositoriesListActivityPresenter;
 import frogermcs.io.githubclient.ui.adapter.RepositoriesListAdapter;
 
 
-public class RepositoriesListActivity extends BaseActivity {
+public class RepositoriesListActivity extends AppCompatActivity {
     @BindView(R.id.rvRepositories)
     RecyclerView rvRepositories;
     @BindView(R.id.pbLoading)
@@ -35,6 +36,7 @@ public class RepositoriesListActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repositories_list);
         ButterKnife.bind(this);
@@ -45,13 +47,6 @@ public class RepositoriesListActivity extends BaseActivity {
     private void setupRepositoriesListView() {
         rvRepositories.setAdapter(repositoriesListAdapter);
         rvRepositories.setLayoutManager(linearLayoutManager);
-    }
-
-    @Override
-    protected void setupActivityComponent() {
-        GithubClientApplication.get(this).getUserComponent()
-                .plus(new RepositoriesListActivityModule(this))
-                .inject(this);
     }
 
     public void showLoading(boolean loading) {
